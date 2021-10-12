@@ -6,7 +6,6 @@ from lxml import etree
 import yagmail
 from lxml.html import tostring
 import re
-from pywchat import Sender
 
 
 def get_url(url):
@@ -54,25 +53,13 @@ def email_send(rsp):
     print('邮件已发送请查收...')
 
 
-def send_wechat(url, **kwargs):
-    date_time = (datetime.date.today() + datetime.timedelta(-1)).strftime("%Y-%#m-%#d").replace('-', '{}').format('年',
-                                                                                                                  '月') + "日新闻联播文字版"
-    url = url + "/{}".format(date_time)
-    user = kwargs.pop("touser")
-    Sender(**kwargs).send_textcard(date_time, date_time, url, touser=user)
-
-
-def main(wechat=None, **kwargs):
+def main():
     # 程序执行入口
     uri = "http://mrxwlb.com"
 
-    if wechat:
-        send_wechat(uri, **kwargs)
-    else:
-        rsp = get_url(uri)
-        news_content = data_handle(rsp)
-        # print(news_content)
-        email_send(news_content)
+    rsp = get_url(uri)
+    news_content = data_handle(rsp)
+    email_send(news_content)
 
 
 if __name__ == '__main__':
