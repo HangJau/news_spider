@@ -17,10 +17,13 @@
    云函数版(news_SCF)，部署在云函数中，执行由云函数的触发器执行,代码中只修改采集的日期情况 ----[云函数部署步骤](https://www.52pojie.cn/forum.php?mod=viewthread&tid=1316454&page=1&extra=#pid35480150)
    
 2、更改获取的日期(当天发送当天的新闻)
+
     日期精度为：日
-    默认为昨天
-    修改  str_time = int(strTime) - 1    修改 1  即可
     
+    默认为每天早上8:30 发送前一天的新闻
+    
+    修改  str_time = int(strTime) - 1    修改 1  即可
+
     例： 获取今天往后2天（前天）的新闻
         str_time = int(strTime) - 2 
   
