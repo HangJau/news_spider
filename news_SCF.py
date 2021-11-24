@@ -26,7 +26,11 @@ def get_hanlder(url):
         exit()
 
 
-def get_news(rsp):
+def get_news(url):
+    """
+    新闻联播获取函数
+    """
+    rsp = get_hanlder(url)
     etr = etree.HTML(rsp)
     titles = etr.xpath("//div[@class='title']/text()")
     hrefs = etr.xpath("//li/a/@href")
@@ -38,7 +42,7 @@ def get_news(rsp):
             # 获取新闻概要
             title_rsp = get_hanlder(href)
             summary = '<div>' + re.search(r'</em>本期节目主要内容：[\s\S]*。', title_rsp).group(
-                0) + "</div></br></br>"
+                0) + "</div>\n\n\n"
             continue
 
         # 新闻标题去掉视频并处理成超链接  橙色 #D2691E
@@ -51,7 +55,7 @@ def get_news(rsp):
         news_th = re.findall(r'.*(<div class="cnt_bd"><!--repaste.body.begin-->.*?</div>).*', news_text)[0]
         news.append(f"{subtitle}\n{news_th}")
 
-    news[0] = summary
+    news.insert(0,summary)
     return news
 
 
@@ -64,7 +68,6 @@ def email_send(rsp):
 
 def scf_run(event, context):
     url = f'https://tv.cctv.com/lm/xwlb/day/{str_time}.shtml'
-    rsp = get_hanlder(url)
-    news_text = get_news(rsp)
+    news_text = get_news(url)
     email_send(news_text)
 
