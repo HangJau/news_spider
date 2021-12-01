@@ -2,7 +2,7 @@ import re
 import requests
 import schedule
 from lxml import etree
-import time
+import datetime
 import yagmail
 
 headers = {
@@ -65,9 +65,13 @@ def email_send(rsp):
 
 
 def run():
-    url = f'https://tv.cctv.com/lm/xwlb/day/{str_time}.shtml'
+    # 获取日期，处理是天，要更改为当天推送更改 -1 为 0
+    strTime = (datetime.date.today() + datetime.timedelta(-1)).strftime("%Y%m%d")
+
+    url = f'https://tv.cctv.com/lm/xwlb/day/{strTime}.shtml'
+
     news_text = get_news(url)
-    email_send(news_text)
+    email_send(news_text, strTime)
 
 
 if __name__ == '__main__':
