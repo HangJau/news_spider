@@ -1,17 +1,12 @@
 import re
 import requests
 from lxml import etree
-import time
+import datetime
 import yagmail
 
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4651.0 Safari/537.36'
 }
-
-# 获取日期
-timeStruct = time.localtime()
-strTime = time.strftime("%Y%m%d", timeStruct)
-str_time = int(strTime) - 1  # 如果是上午8点以后推送的，括号外的“-1”要删除
 
 
 # 获取新闻
@@ -59,15 +54,19 @@ def get_news(url):
     return news
 
 
-def email_send(rsp):
+def email_send(rsp,strdate):
     # 发送数据到邮箱
     yag = yagmail.SMTP(user='sendQQemail', password='emailpassword', host='smtp.qq.com', port=465)
-    yag.send(to=["receiveemai"], subject=f"{str_time}日新闻联播推送", contents=rsp)
+    yag.send(to=["receiveemai"], subject=f"{strdate}日新闻联播推送", contents=rsp)
     print('邮件已发送请查收...')
 
 
 def scf_run(event, context):
-    url = f'https://tv.cctv.com/lm/xwlb/day/{str_time}.shtml'
+    # 获取日期
+    strTime = (datetime.date.today() + datetime.timedelta(-1)).strftime("%Y%m%d")
+
+    url = f'https://tv.cctv.com/lm/xwlb/day/{strTime}.shtml'
+
     news_text = get_news(url)
-    email_send(news_text)
+    email_send(news_text, strTime)
 
