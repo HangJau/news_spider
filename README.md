@@ -22,10 +22,10 @@
     
     默认为每天早上8:30 发送前一天的新闻
     
-    修改  str_time = int(strTime) - 1    修改 1  即可
+    修改  str_time = (datetime.date.today() + datetime.timedelta(-1)).strftime("%Y%m%d")
 
-    例： 获取今天往后2天（前天）的新闻
-        str_time = int(strTime) - 2 
+    例： 获取今天往前2天（前天）的新闻
+        str_time = (datetime.date.today() + datetime.timedelta(-2)).strftime("%Y%m%d")
   
  tips:
     不能修改为未来时间，只能是过去时间
@@ -36,6 +36,10 @@
     3、首先是当日新闻概要，余下部分是新闻详情
 
 ### 更新：
+    
+    20211201：
+        修复跨月日期问题。直接使用日期操作
+    
     
     1、已维护地址为央视
     2、邮件增加了新闻概要.
