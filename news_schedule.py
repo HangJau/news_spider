@@ -30,7 +30,7 @@ def get_hanlder(url):
 def get_news(url):
     rsp = get_hanlder(url)
     etr = etree.HTML(rsp)
-    titles = etr.xpath("//div[@class='title']/text()")
+    titles = etr.xpath("//li/a/text()")
     hrefs = etr.xpath("//li/a/@href")
 
     news = []
